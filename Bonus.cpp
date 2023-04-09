@@ -10,7 +10,6 @@ struct Window BonusInitialise(struct Window wind0, int bonus_count, int blok_num
 	struct Window wind = wind0;
 	bonus_count++;
 	wind.bonus_count = bonus_count;
-	//wind.bonus = new struct Bonus[bonus_count];
 	wind.bonus = (struct Bonus*)realloc(wind.bonus, bonus_count * sizeof(struct Bonus));
 	int i = bonus_count - 1;
 	(wind.bonus + i)->size.height = BONUS_SIZE_HEIGHT;
@@ -114,10 +113,9 @@ struct Window Bonus_destroy(struct Window wind0, int bonus_number)
 
 	for (int i = bonus_number; i < wind.bonus_count - 1; i++)
 	{
-		wind.bonus[i] = wind.bonus[i + 1]; // ÊÀÊ ÎÑÂÎÁÎÄÈÒÜ ÏÀÌßÒÜ?
+		wind.bonus[i] = wind.bonus[i + 1];
 	}
 
-	//delete& wind.bonus[wind.bonus_count]; // Âðîäå òàê, íî íå òî÷íî
 	wind.bonus_count--;
 
 	wind.bonus = (struct Bonus*)realloc(wind.bonus, wind.bonus_count * sizeof(struct Bonus));

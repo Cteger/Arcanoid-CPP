@@ -20,7 +20,7 @@ struct Window Release_Fire_Ball(struct Window wind0)
 
 	wind.ball.fire_flag = 0;
 
-	wind.ball.color.red = 0;
+	wind.ball.color.red = 0.0;
 	wind.ball.color.green = 0.0;
 	wind.ball.color.blue = 0.0;
 

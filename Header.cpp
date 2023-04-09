@@ -124,16 +124,6 @@ void MouseMove(int x, int y)
 	wind.racket.speed[1] = wind.racket.speed[0];
 	wind.racket.speed[0] = x;
 
-	/*if (wind.count == 10)
-	{
-		wind.buffer[0] = wind.racket.position.x + wind.racket.size.width / 2;
-
-		for (int i = 1; i < 10; i++)
-		{
-			wind.buffer[i] = wind.buffer[i-1];
-		}
-		wind.count = 0;
-	}*/
 	wind.count++;
 
 	if (x >= wind.size.width - wind.racket.size.width + wind.racket.size.width / 2)
