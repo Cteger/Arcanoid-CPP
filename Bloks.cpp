@@ -1,5 +1,6 @@
 #include "Bloks.h"
 #include "Bonus.h"
+
 #include <glut.h>
 #include <stdlib.h>
 
@@ -75,65 +76,65 @@ struct Window Level(struct Window wind0, struct Blok* bloks, int blok_count, int
 	return(wind);
 }
 
-void DrawBloks(struct Window wind)
+void DrawBloks(struct Blok* bloks, int blok_count)
 {
 	glBegin(GL_QUADS);
 
-	for (int i = 0; i < wind.blok_count; i++)
+	for (int i = 0; i < blok_count; i++)
 	{
-		if ((wind.bloks + i)->strength == 1)
+		if ((bloks + i)->strength == 1)
 		{
-			(wind.bloks + i)->color.red = 0;
-			(wind.bloks + i)->color.green = 1.0;
-			(wind.bloks + i)->color.blue = 0.0;
+			(bloks + i)->color.red = 0;
+			(bloks + i)->color.green = 1.0;
+			(bloks + i)->color.blue = 0.0;
 		}
-		else if ((wind.bloks + i)->strength == 2)
+		else if ((bloks + i)->strength == 2)
 		{
-			(wind.bloks + i)->color.red = 1.0;
-			(wind.bloks + i)->color.green = 1.0;
-			(wind.bloks + i)->color.blue = 0.0;
+			(bloks + i)->color.red = 1.0;
+			(bloks + i)->color.green = 1.0;
+			(bloks + i)->color.blue = 0.0;
 		}
-		else if ((wind.bloks + i)->strength == 3)
+		else if ((bloks + i)->strength == 3)
 		{
-			(wind.bloks + i)->color.red = 0.1;
-			(wind.bloks + i)->color.green = 0.2;
-			(wind.bloks + i)->color.blue = 0.8;
+			(bloks + i)->color.red = 0.1;
+			(bloks + i)->color.green = 0.2;
+			(bloks + i)->color.blue = 0.8;
 		}
-		else if ((wind.bloks + i)->strength == 4)
+		else if ((bloks + i)->strength == 4)
 		{
-			(wind.bloks + i)->color.red = 1.0;
-			(wind.bloks + i)->color.green = 0.5;
-			(wind.bloks + i)->color.blue = 0.5;
+			(bloks + i)->color.red = 1.0;
+			(bloks + i)->color.green = 0.5;
+			(bloks + i)->color.blue = 0.5;
 		}
 
-		glColor3f((wind.bloks + i)->color.red,
-			(wind.bloks + i)->color.green,
-			(wind.bloks + i)->color.blue);
+		glColor3f((bloks + i)->color.red,
+			(bloks + i)->color.green,
+			(bloks + i)->color.blue);
 
-		glVertex2d((wind.bloks + i)->position.x, (wind.bloks + i)->position.y);
-		glVertex2d((wind.bloks + i)->position.x + (wind.bloks + i)->size.width,
-			(wind.bloks + i)->position.y);
-		glVertex2d((wind.bloks + i)->position.x + (wind.bloks + i)->size.width,
-			(wind.bloks + i)->position.y - (wind.bloks + i)->size.height);
-		glVertex2d((wind.bloks + i)->position.x,
-			(wind.bloks + i)->position.y - (wind.bloks + i)->size.height);
+		glVertex2d((bloks + i)->position.x, (bloks + i)->position.y);
+		glVertex2d((bloks + i)->position.x + (bloks + i)->size.width,
+			(bloks + i)->position.y);
+		glVertex2d((bloks + i)->position.x + (bloks + i)->size.width,
+			(bloks + i)->position.y - (bloks + i)->size.height);
+		glVertex2d((bloks + i)->position.x,
+			(bloks + i)->position.y - (bloks + i)->size.height);
 	}
 
 	glEnd();
 
-	for (int i = 0; i < wind.blok_count; i++)
+	for (int i = 0; i < blok_count; i++)
 	{
 		glColor3f(0, 0, 0);
 
 		glBegin(GL_LINE_LOOP);
 
-		glVertex2d((wind.bloks + i)->position.x, (wind.bloks + i)->position.y);
-		glVertex2d((wind.bloks + i)->position.x + (wind.bloks + i)->size.width,
-			(wind.bloks + i)->position.y);
-		glVertex2d((wind.bloks + i)->position.x + (wind.bloks + i)->size.width,
-			(wind.bloks + i)->position.y - (wind.bloks + i)->size.height);
-		glVertex2d((wind.bloks + i)->position.x,
-			(wind.bloks + i)->position.y - (wind.bloks + i)->size.height);
+		glVertex2d((bloks + i)->position.x, (bloks + i)->position.y);
+		glVertex2d((bloks + i)->position.x + (bloks + i)->size.width,
+			(bloks + i)->position.y);
+		glVertex2d((bloks + i)->position.x + (bloks + i)->size.width,
+			(bloks + i)->position.y - (bloks + i)->size.height);
+		glVertex2d((bloks + i)->position.x,
+			(bloks + i)->position.y - (bloks + i)->size.height);
 
 		glEnd();
 	}

@@ -1,39 +1,39 @@
 #include "Racket.h"
 #include <glut.h>
 
-struct Racket RacketInitialise(struct Window wind0)
+struct Racket RacketInitialise(int width)
 {
-	struct Window wind = wind0;
-	wind.racket.size.height = RACKET_HIGHT;
-	wind.racket.size.width = RACKET_WIDTH;
-	wind.racket.position.x = wind.size.width / 2;
-	wind.racket.position.x = (wind.size.width - RACKET_WIDTH) / 2;
-	wind.racket.position.y = 10;
+	struct Racket racket;
+	racket.size.height = RACKET_HIGHT;
+	racket.size.width = RACKET_WIDTH;
+	racket.position.x = width / 2;
+	racket.position.x = (width - RACKET_WIDTH) / 2;
+	racket.position.y = 10;
 
-	wind.racket.color.red = 0;
-	wind.racket.color.green = 1;
-	wind.racket.color.blue = 0;
+	racket.color.red = 0;
+	racket.color.green = 1;
+	racket.color.blue = 0;
 	
-	wind.racket.speed = new int[2];
+	racket.speed = new int[2];
 
-	return wind.racket;
+	return racket;
 }
 
-void DrawRacket(struct Window wind)
+void DrawRacket(struct Racket racket)
 {
 	glBegin(GL_QUADS);
 
-	glColor3f(wind.racket.color.red,
-			  wind.racket.color.green,
-			  wind.racket.color.blue);
+	glColor3f(racket.color.red,
+			  racket.color.green,
+			  racket.color.blue);
 
-	glVertex2d(wind.racket.position.x, wind.racket.position.y);
-	glVertex2d(wind.racket.position.x + wind.racket.size.width,
-		wind.racket.position.y);
-	glVertex2d(wind.racket.position.x + wind.racket.size.width,
-		wind.racket.position.y - wind.racket.size.height);
-	glVertex2d(wind.racket.position.x,
-		wind.racket.position.y - wind.racket.size.height);
+	glVertex2d(racket.position.x, racket.position.y);
+	glVertex2d(racket.position.x + racket.size.width,
+		racket.position.y);
+	glVertex2d(racket.position.x + racket.size.width,
+		racket.position.y - racket.size.height);
+	glVertex2d(racket.position.x,
+		racket.position.y - racket.size.height);
 
 	glEnd();
 }

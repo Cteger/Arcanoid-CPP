@@ -1,54 +1,49 @@
 #include "Bonus.h"
-#include "Fire_Ball.h"
-#include "Little_Big_Racket.h"
-#include "New_HP.h"
+
 #include <glut.h>
 #include <stdlib.h>
 
-struct Window BonusInitialise(struct Window wind0, int bonus_count, int blok_number)
+struct Bonus BonusInitialise(struct Blok blok)
 {
-	struct Window wind = wind0;
-	bonus_count++;
-	wind.bonus_count = bonus_count;
-	wind.bonus = (struct Bonus*)realloc(wind.bonus, bonus_count * sizeof(struct Bonus));
-	int i = bonus_count - 1;
-	(wind.bonus + i)->size.height = BONUS_SIZE_HEIGHT;
-	(wind.bonus + i)->size.width = BONUS_SIZE_WIDTH;
-	(wind.bonus + i)->position.x = (wind.bloks + blok_number)->position.x + (wind.bloks->size.width) / 2
+	struct Bonus bonus;
+	
+	bonus.size.height = BONUS_SIZE_HEIGHT;
+	bonus.size.width = BONUS_SIZE_WIDTH;
+	bonus.position.x = blok.position.x + (blok.size.width) / 2
 		- BONUS_SIZE_WIDTH / 2;
-	(wind.bonus + i)->position.y = (wind.bloks + blok_number)->position.y - (wind.bloks->size.height) / 2
+	bonus.position.y = blok.position.y - (blok.size.height) / 2
 		+ BONUS_SIZE_HEIGHT / 2;
-	(wind.bonus + i)->type = rand() % 4 + 1;
+	bonus.type = rand() % 4 + 1;
 
-	if ((wind.bonus + i)->type == 1)
+	if (bonus.type == 1)
 	{
-		(wind.bonus + i)->color.red = 1.0;
-		(wind.bonus + i)->color.green = 0.1;
-		(wind.bonus + i)->color.blue = 0.1;
+		bonus.color.red = 1.0;
+		bonus.color.green = 0.1;
+		bonus.color.blue = 0.1;
 	}
-	else if ((wind.bonus + i)->type == 2)
+	else if (bonus.type == 2)
 	{
-		(wind.bonus + i)->color.red = 0.0;
-		(wind.bonus + i)->color.green = 0.5;
-		(wind.bonus + i)->color.blue = 1.0;
+		bonus.color.red = 0.0;
+		bonus.color.green = 0.5;
+		bonus.color.blue = 1.0;
 	}
-	else if ((wind.bonus + i)->type == 3)
+	else if (bonus.type == 3)
 	{
-		(wind.bonus + i)->color.red = 1.0;
-		(wind.bonus + i)->color.green = 0.5;
-		(wind.bonus + i)->color.blue = 0.0;
+		bonus.color.red = 1.0;
+		bonus.color.green = 0.5;
+		bonus.color.blue = 0.0;
 	}
-	else if ((wind.bonus + i)->type == 4)
+	else if (bonus.type == 4)
 	{
-		(wind.bonus + i)->color.red = 0.0;
-		(wind.bonus + i)->color.green = 0.0;
-		(wind.bonus + i)->color.blue = 0.0;
+		bonus.color.red = 0.0;
+		bonus.color.green = 0.0;
+		bonus.color.blue = 0.0;
 	}
 
-	(wind.bonus + i)->vector.x = 0;
-	(wind.bonus + i)->vector.y = (-0.5) * SPEED;
+	bonus.vector.x = 0;
+	bonus.vector.y = (-0.5) * SPEED;
 
-	return(wind);
+	return bonus;
 }
 
 struct Window CheckBonus(struct Window wind0, int bonus_number)
@@ -62,18 +57,19 @@ struct Window CheckBonus(struct Window wind0, int bonus_number)
 
 	if (y0 <= 0)
 	{
-		wind = Bonus_destroy(wind, bonus_number);
+		wind.bonus = BonusDestroy(wind.bonus, wind.bonus_count, bonus_number);
+		wind.bonus_count--;
 	}
 	else if ((x1 >= wind.racket.position.x)
 		&& (x0 <= wind.racket.position.x + wind.racket.size.width)
 		&& (y1 <= wind.racket.position.y))
 	{
-		wind = Bonus_catch(wind, bonus_number);
+		wind = BonusCatch(wind, bonus_number);
 	}
 	return wind;
 }
 
-struct Window Bonus_catch(struct Window wind0, int bonus_number)
+struct Window BonusCatch(struct Window wind0, int bonus_number)
 {
 	struct Window wind = wind0;
 
@@ -81,65 +77,133 @@ struct Window Bonus_catch(struct Window wind0, int bonus_number)
 
 	if ((wind.bonus + bonus_number)->type == 1)
 	{
-		wind = Bonus_destroy(wind, bonus_number);
+		wind.bonus = BonusDestroy(wind.bonus, wind.bonus_count, bonus_number);
+		wind.bonus_count--;
 
-		wind = Fire_Ball(wind);
+		wind.ball = FireBallInitialise(wind.ball);
 	}
 	else if ((wind.bonus + bonus_number)->type == 2)
 	{
-		wind = Bonus_destroy(wind, bonus_number);
+		wind.bonus = BonusDestroy(wind.bonus, wind.bonus_count, bonus_number);
+		wind.bonus_count--;
 
-		wind = Little_Racket(wind);
+		wind.racket = LittleRacketInitialise(wind.racket);
 	}
 	else if ((wind.bonus + bonus_number)->type == 3)
 	{
-		wind = Bonus_destroy(wind, bonus_number);
+		wind.bonus = BonusDestroy(wind.bonus, wind.bonus_count, bonus_number);
+		wind.bonus_count--;
 
-		wind = Big_Racket(wind);
+		wind.racket = BigRacketInitialise(wind.racket);
 	}
 	else if ((wind.bonus + bonus_number)->type == 4)
 	{
-		wind = Bonus_destroy(wind, bonus_number);
+		wind.bonus = BonusDestroy(wind.bonus, wind.bonus_count, bonus_number);
+		wind.bonus_count--;
 
-		wind = New_HP(wind);
+		wind.hp = NewHP(wind.hp);
 	}
 
 	return wind;
 }
 
-struct Window Bonus_destroy(struct Window wind0, int bonus_number)
+struct Bonus* BonusDestroy(struct Bonus* bonus0, int bonus_count, int bonus_number)
 {
-	struct Window wind = wind0;
+	struct Bonus* bonus = bonus0;
 
-	for (int i = bonus_number; i < wind.bonus_count - 1; i++)
+	for (int i = bonus_number; i < bonus_count - 1; i++)
 	{
-		wind.bonus[i] = wind.bonus[i + 1];
+		bonus[i] = bonus[i + 1];
 	}
 
-	wind.bonus_count--;
+	bonus_count--;
 
-	wind.bonus = (struct Bonus*)realloc(wind.bonus, wind.bonus_count * sizeof(struct Bonus));
+	bonus = (struct Bonus*)realloc(bonus, bonus_count * sizeof(struct Bonus));
 
-	return wind;
+	return bonus;
 }
 
-void DrawBonus(struct Window wind)
+void DrawBonus(struct Bonus* bonus, int bonus_count)
 {
 	glBegin(GL_QUADS);
 
-	for (int i = 0; i < wind.bonus_count; i++)
+	for (int i = 0; i < bonus_count; i++)
 	{
-		glColor3f((wind.bonus + i)->color.red,
-			(wind.bonus + i)->color.green,
-			(wind.bonus + i)->color.blue);
+		glColor3f((bonus + i)->color.red,
+			(bonus + i)->color.green,
+			(bonus + i)->color.blue);
 
-		glVertex2d((wind.bonus + i)->position.x, (wind.bonus + i)->position.y);
-		glVertex2d((wind.bonus + i)->position.x + (wind.bonus + i)->size.width,
-			(wind.bonus + i)->position.y);
-		glVertex2d((wind.bonus + i)->position.x + (wind.bonus + i)->size.width,
-			(wind.bonus + i)->position.y - (wind.bonus + i)->size.height);
-		glVertex2d((wind.bonus + i)->position.x,
-			(wind.bonus + i)->position.y - (wind.bonus + i)->size.height);
+		glVertex2d((bonus + i)->position.x, (bonus + i)->position.y);
+		glVertex2d((bonus + i)->position.x + (bonus + i)->size.width,
+			(bonus + i)->position.y);
+		glVertex2d((bonus + i)->position.x + (bonus + i)->size.width,
+			(bonus + i)->position.y - (bonus + i)->size.height);
+		glVertex2d((bonus + i)->position.x,
+			(bonus + i)->position.y - (bonus + i)->size.height);
 	}
 	glEnd();
+}
+
+struct Ball* FireBallInitialise(struct Ball* ball0)
+{
+	struct Ball* ball = ball0;
+
+	ball[0].fire_ball_flag = 1;
+
+	ball[0].color.red = 1;
+	ball[0].color.green = 0.1;
+	ball[0].color.blue = 0.1;
+
+	return ball;
+}
+
+struct Ball* ReleaseFireBall(struct Ball* ball0)
+{
+	struct Ball* ball = ball0;
+
+	ball[0].fire_ball_flag = 0;
+
+	ball[0].color.red = 0.0;
+	ball[0].color.green = 0.0;
+	ball[0].color.blue = 0.0;
+
+	return ball;
+}
+
+struct Racket LittleRacketInitialise(struct Racket racket0)
+{
+	struct Racket racket = racket0;
+
+
+	racket.size.width /= 2;
+
+	racket.color.red = 0;
+	racket.color.green = 0;
+	racket.color.blue = 1;
+
+	return racket;
+}
+
+struct Racket BigRacketInitialise(struct Racket racket0)
+{
+	struct Racket racket = racket0;
+
+	racket.size.width *= 1.4;
+
+	racket.color.red = 1;
+	racket.color.green = 0;
+	racket.color.blue = 0;
+
+	return racket;
+}
+
+
+int NewHP(int hp)
+{
+	if (hp < 3)
+	{
+		hp++;
+	}
+
+	return hp;
 }

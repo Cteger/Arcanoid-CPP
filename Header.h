@@ -59,10 +59,10 @@ struct Ball
 	struct Size size;
 	struct Position position;
 	struct Color color;
-	int launch;
-	int fire_flag;
+	int launch_flag;
 	struct Vector vector;
 	int max_speed;
+	int fire_ball_flag;
 };
 
 struct Bonus
@@ -80,24 +80,22 @@ struct Window
 	struct Position position;
 	struct Color color;
 	struct Blok* bloks;
-	struct Ball ball;
+	struct Ball* ball;
 	struct Racket racket;
 	struct Bonus* bonus;
 	float buffer[10];
 	int count;
 	int blok_count;
 	int bonus_count;
+	int ball_count;
 	int glutNum;
 	int hp;
 	int level;
-	int test;
 	int menu_size;
 	int score;
 };
 
 void SystemOpen(int argc, char** argv);
-
-void SystemClose();
 
 void SystemRelease();
 
@@ -106,10 +104,6 @@ void SystemInitialise(int hp, struct Blok* blok, int blok_count, int level);
 void SystemUpdate();
 
 void RenderScene();
-
-void SecondScene();
-
-void WindDisplay();
 
 void Draw();
 

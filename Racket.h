@@ -1,6 +1,6 @@
 #pragma once
 #include "Header.h"
 
-struct Racket RacketInitialise(struct Window wind0);
+struct Racket RacketInitialise(int width);
 
-void DrawRacket(struct Window wind);
+void DrawRacket(struct Racket racket);
