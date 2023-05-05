@@ -61,7 +61,7 @@ struct Ball
 	struct Color color;
 	int launch_flag;
 	struct Vector vector;
-	int max_speed;
+	float max_speed;
 	int fire_ball_flag;
 };
 
@@ -99,7 +99,7 @@ void SystemOpen(int argc, char** argv);
 
 void SystemRelease();
 
-void SystemInitialise(int hp, struct Blok* blok, int blok_count, int level);
+void SystemInitialise(int hp, int next_level_flag, int blok_count, int level);
 
 void SystemUpdate();
 
@@ -111,6 +111,6 @@ void MouseMove(int x, int y);
 
 void MouseButton(int button, int state, int x, int y);
 
-struct Window Destroy(struct Window wind0, int i);
+void Destroy(struct Window& wind, int i);
 
 void EndGame(int win_point);

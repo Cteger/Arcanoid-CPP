@@ -1,10 +1,10 @@
 #pragma once
 #include "Header.h"
 
-struct Ball BallInitialise(struct Racket racket);
+void BallInitialise(struct Ball& ball, struct Racket& racket);
 
-struct Window CheckBall(struct Window wind0);
+void CheckBall(struct Window& wind);
 
-void DrawHP(struct Window wind);
+void DrawHP(struct Window& wind);
 
-void DrawBall(struct Ball* ball);
+void DrawBall(struct Ball*& ball);

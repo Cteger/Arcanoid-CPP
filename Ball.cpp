@@ -3,9 +3,8 @@
 
 #include <glut.h>
 
-struct Ball BallInitialise(struct Racket racket)
+void BallInitialise(struct Ball& ball, struct Racket& racket)
 {
-	struct Ball ball;
 	ball.size.height = BALL_SIZE_HEIGHT;
 	ball.size.width = BALL_SIZE_WIDTH;
 	ball.position.x = racket.position.x + racket.size.width / 2
@@ -21,14 +20,10 @@ struct Ball BallInitialise(struct Racket racket)
 	ball.color.red = 0;
 	ball.color.green = 0;
 	ball.color.blue = 0;
-
-	return ball;
 }
 
-struct Window CheckBall(struct Window wind0)
+void CheckBall(struct Window& wind)
 {
-	struct Window wind = wind0;
-
 	int x0 = wind.ball[0].position.x + wind.ball[0].vector.x;
 	int x1 = x0 + wind.ball[0].size.width;
 	int y0 = wind.ball[0].position.y + wind.ball[0].vector.y;
@@ -42,7 +37,7 @@ struct Window CheckBall(struct Window wind0)
 	if (y0 >= wind.size.height - wind.menu_size)
 	{
 		wind.ball[0].vector.y = (-1) * wind.ball[0].vector.y;
-		wind.ball = ReleaseFireBall(wind.ball);
+		ReleaseFireBall(wind.ball);
 	}
 
 	if (y0 <= 0)
@@ -82,7 +77,7 @@ struct Window CheckBall(struct Window wind0)
 			{
 				wind.ball[0].vector.y = (-1) * wind.ball[0].vector.y;
 			}
-			wind = Destroy(wind, i);
+			Destroy(wind, i);
 			break;
 		}
 		else if ((x1 > (wind.bloks + i)->position.x)
@@ -98,17 +93,15 @@ struct Window CheckBall(struct Window wind0)
 		{
 			if (wind.ball[0].fire_ball_flag == 0)
 			{
-				wind.ball[0].vector.x = (-1) * wind.ball[0].vector.x;
+			wind.ball[0].vector.x = (-1) * wind.ball[0].vector.x;
 			}
-			wind = Destroy(wind, i);
+			Destroy(wind, i);
 			break;
 		}
 	}
-
-	return wind;
 }
 
-void DrawHP(struct Window wind)
+void DrawHP(struct Window& wind)
 {
 	glColor3f(0, 0, 0);
 
@@ -141,7 +134,7 @@ void DrawHP(struct Window wind)
 	}
 }
 
-void DrawBall(struct Ball* ball)
+void DrawBall(struct Ball*& ball)
 {
 	glBegin(GL_QUADS);
 
@@ -156,5 +149,6 @@ void DrawBall(struct Ball* ball)
 		ball[0].position.y - ball[0].size.height);
 	glVertex2d(ball[0].position.x,
 		ball[0].position.y - ball[0].size.height);
+
 	glEnd();
 }

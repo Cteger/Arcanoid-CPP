@@ -4,16 +4,9 @@
 #include <glut.h>
 #include <stdlib.h>
 
-struct Window Level(struct Window wind0, struct Blok* bloks, int blok_count, int level)
+void Level(struct Window& wind, int blok_count, int level)
 {
-	struct Window wind = wind0;
-
-	if (bloks != 0)
-	{
-		wind.bloks = bloks;
-		wind.blok_count = blok_count;
-	}
-	else if (level == 1)
+	if (level == 1)
 	{
 		wind.blok_count = BLOK_COUNT1;
 		wind.bloks = 0;
@@ -72,11 +65,9 @@ struct Window Level(struct Window wind0, struct Blok* bloks, int blok_count, int
 			}
 		}
 	}
-
-	return(wind);
 }
 
-void DrawBloks(struct Blok* bloks, int blok_count)
+void DrawBloks(struct Blok*& bloks, int blok_count)
 {
 	glBegin(GL_QUADS);
 

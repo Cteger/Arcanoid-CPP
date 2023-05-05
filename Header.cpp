@@ -17,7 +17,7 @@ void SystemOpen(int argc, char** argv)
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 }
 
-void SystemInitialise(int hp, struct Blok* bloks, int blok_count, int level)
+void SystemInitialise(int hp, int next_level_flag, int blok_count, int level)
 {
 	wind.size.width = WINDOW_SIZEX;
 	wind.size.height = WINDOW_SIZEY;
@@ -28,17 +28,22 @@ void SystemInitialise(int hp, struct Blok* bloks, int blok_count, int level)
 	wind.level = level;
 	wind.hp = hp;
 
-	wind.racket = RacketInitialise(wind.size.width);
+	RacketInitialise(wind.racket, wind.size.width);
 
 	wind.ball = new struct Ball;
 
-	wind.ball[0] = BallInitialise(wind.racket);
+	BallInitialise(wind.ball[0], wind.racket);
 
-	wind = Level(wind, bloks, blok_count, wind.level);
+	wind.level = level;
+
+	if (next_level_flag == 0)
+	{
+		Level(wind, blok_count, level);
+	}
 
 	wind.bonus_count = 0;
 
-	wind.ball = ReleaseFireBall(wind.ball);
+	ReleaseFireBall(wind.ball);
 
 	SystemUpdate();
 }
@@ -70,11 +75,11 @@ void RenderScene()
 {
 	if (wind.ball[0].launch_flag == 0)
 	{
-		wind.ball[0] = BallInitialise(wind.racket);
+		BallInitialise(wind.ball[0], wind.racket);
 	}
 	else
 	{
-		wind = CheckBall(wind);
+		CheckBall(wind);
 		wind.ball[0].position.x += wind.ball[0].vector.x;
 		wind.ball[0].position.y += wind.ball[0].vector.y;
 		Sleep(SLEEP);
@@ -82,7 +87,7 @@ void RenderScene()
 
 	for (int i = 0; i < wind.bonus_count; i++)
 	{
-		wind = CheckBonus(wind, i);
+		CheckBonus(wind, i);
 
 		if (wind.bonus_count != 0)
 		{
@@ -146,7 +151,8 @@ void MouseButton(int button, int state, int x, int y)
 	if ((button == GLUT_LEFT_BUTTON) && (state == GLUT_DOWN) &&
 		(wind.ball[0].launch_flag == 0))
 	{
-		wind.ball[0].vector.x = wind.racket.speed[0] - wind.racket.speed[1] + 1;
+		wind.ball[0].vector.x = wind.racket.speed[0] - wind.racket.speed[1] + 1
+			-wind.ball[0].max_speed / 10;
 		wind.ball[0].vector.y = sqrt(wind.ball[0].max_speed * wind.ball[0].max_speed
 			- wind.ball[0].vector.x * wind.ball[0].vector.x);
 		wind.ball[0].launch_flag = 1;
@@ -154,10 +160,8 @@ void MouseButton(int button, int state, int x, int y)
 	}
 }
 
-struct Window Destroy(struct Window wind0, int i)
+void Destroy(struct Window& wind, int i)
 {
-	struct Window wind = wind0;
-
 	if (wind.blok_count == 1)
 	{
 		EndGame(1);
@@ -170,7 +174,7 @@ struct Window Destroy(struct Window wind0, int i)
 			{
 				wind.bonus_count++;
 				wind.bonus = (struct Bonus*)realloc(wind.bonus, wind.bonus_count * sizeof(struct Bonus));
-				wind.bonus[wind.bonus_count - 1] = BonusInitialise(wind.bloks[i]);
+				BonusInitialise(wind.bonus[wind.bonus_count - 1], wind.bloks[i]);
 			}
 
 			for (int j = i; j < wind.blok_count - 1; j++)
@@ -191,7 +195,6 @@ struct Window Destroy(struct Window wind0, int i)
 			wind.score += 30;
 		}
 	}
-	return wind;
 }
 
 void EndGame(int win_point)
@@ -202,8 +205,11 @@ void EndGame(int win_point)
 		{
 			SystemRelease();
 		}
-		wind.level++;
-		SystemInitialise(wind.hp, 0, 0, wind.level);
+		else
+		{
+			wind.level++;
+			SystemInitialise(wind.hp, 0, 0, wind.level);
+		}
 	}
 	else
 	{
@@ -214,7 +220,7 @@ void EndGame(int win_point)
 		else
 		{
 			wind.hp--;
-			SystemInitialise(wind.hp, wind.bloks, wind.blok_count, wind.level);
+			SystemInitialise(wind.hp, 1, wind.blok_count, wind.level);
 		}
 	}
 }

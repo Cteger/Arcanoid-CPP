@@ -1,22 +1,22 @@
 #pragma once
 #include "Header.h"
 
-struct Bonus BonusInitialise(struct Blok blok);
+void BonusInitialise(struct Bonus& bonus, struct Blok& blok);
 
-struct Window CheckBonus(struct Window wind0, int bonus_number);
+void CheckBonus(struct Window& wind, int bonus_number);
 
-struct Bonus* BonusDestroy(struct Bonus* bonus0, int bonus_count, int bonus_number);
+void BonusDestroy(struct Bonus*& bonus0, int bonus_count, int bonus_number);
 
-struct Window BonusCatch(struct Window wind0, int bonus_number);
+void BonusCatch(struct Window& wind, int bonus_number);
 
-void DrawBonus(struct Bonus* bonus, int bonus_count);
+void DrawBonus(struct Bonus*& bonus, int bonus_count);
 
-struct Ball* FireBallInitialise(struct Ball* ball0);
+void FireBallInitialise(struct Ball*& ball);
 
-struct Ball* ReleaseFireBall(struct Ball* ball0);
+void ReleaseFireBall(struct Ball*& ball);
 
-struct Racket LittleRacketInitialise(struct Racket racket0);
+void LittleRacketInitialise(struct Racket& racket);
 
-struct Racket BigRacketInitialise(struct Racket racket0);
+void BigRacketInitialise(struct Racket& racket);
 
-int NewHP(int hp);
+void NewHP(int& hp);

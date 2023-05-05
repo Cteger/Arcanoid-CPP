@@ -1,9 +1,8 @@
 #include "Racket.h"
 #include <glut.h>
 
-struct Racket RacketInitialise(int width)
+void RacketInitialise(struct Racket& racket, int width)
 {
-	struct Racket racket;
 	racket.size.height = RACKET_HIGHT;
 	racket.size.width = RACKET_WIDTH;
 	racket.position.x = width / 2;
@@ -15,11 +14,9 @@ struct Racket RacketInitialise(int width)
 	racket.color.blue = 0;
 	
 	racket.speed = new int[2];
-
-	return racket;
 }
 
-void DrawRacket(struct Racket racket)
+void DrawRacket(struct Racket& racket)
 {
 	glBegin(GL_QUADS);
 
